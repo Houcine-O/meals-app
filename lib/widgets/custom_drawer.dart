@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CustomDrawer extends StatelessWidget {
-  const CustomDrawer({super.key});
+  const CustomDrawer({super.key, required this.onSelectDrawer});
+
+  final Function(String screenId) onSelectDrawer;
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +15,7 @@ class CustomDrawer extends StatelessWidget {
             gradient: LinearGradient(
               colors: [
                 Theme.of(context).colorScheme.primaryContainer,
-                Theme.of(context).colorScheme.primaryContainer.withOpacity(0.7),
+                Theme.of(context).colorScheme.primaryContainer.withOpacity(0.9),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -48,7 +50,9 @@ class CustomDrawer extends StatelessWidget {
                 color: Theme.of(context).colorScheme.onBackground,
                 fontSize: 24),
           ),
-          onTap: () {},
+          onTap: () {
+            onSelectDrawer('recipes');
+          },
         ),
         ListTile(
           leading: Icon(
@@ -62,7 +66,9 @@ class CustomDrawer extends StatelessWidget {
                 color: Theme.of(context).colorScheme.onBackground,
                 fontSize: 24),
           ),
-          onTap: () {},
+          onTap: () {
+            onSelectDrawer('filters');
+          },
         ),
       ]),
     );
