@@ -8,8 +8,10 @@ import 'package:meals_app/widgets/category_grid_item.dart';
 import '../models/meal.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen({super.key, required this.toggleFav});
-  final Function(Meal meal) toggleFav;
+  const CategoriesScreen(
+      {super.key, required this.toggleFav, required this.filteredMeals});
+  final void Function(Meal meal) toggleFav;
+  final List<Meal> filteredMeals;
 
   void _selectCategory(BuildContext context, Category category) {
     Navigator.push(
@@ -18,7 +20,7 @@ class CategoriesScreen extends StatelessWidget {
         builder: (context) => MealsScreen(
           title: category.title,
           toggleFav: toggleFav,
-          meals: dummyMeals
+          meals: filteredMeals
               .where(
                 (meal) => meal.categories.contains(category.id),
               )
