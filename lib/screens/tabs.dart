@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:meals_app/data/dummy_data.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:meals_app/providers/meals_provider.dart';
 import 'package:meals_app/screens/categories_screen.dart';
 import 'package:meals_app/screens/filters.dart';
 import 'package:meals_app/screens/meals_screen.dart';
@@ -13,20 +15,20 @@ const kFiltersMap = {
   Filters.Vegetarian: false
 };
 
-class TabsScreen extends StatefulWidget {
+class TabsScreen extends ConsumerStatefulWidget {
   const TabsScreen({super.key});
 
   @override
-  State<TabsScreen> createState() => _TabsScreenState();
+  ConsumerState<TabsScreen> createState() => _TabsScreenState();
 }
 
-class _TabsScreenState extends State<TabsScreen> {
+class _TabsScreenState extends ConsumerState<TabsScreen> {
   int _selectedItemIndex = 0;
   final List<Meal> _favoriteMeals = [];
   Map<Filters, bool> _selectedFilters = kFiltersMap;
 
   void _toggleFavMeals(Meal meal) {
-    if (_favoriteMeals.contains(meal))
+    if (_favoriteMeals.contains(meal)) {
       setState(() {
         _favoriteMeals.remove(meal);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -37,7 +39,7 @@ class _TabsScreenState extends State<TabsScreen> {
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ));
       });
-    else
+    } else {
       setState(() {
         _favoriteMeals.add(meal);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -48,6 +50,7 @@ class _TabsScreenState extends State<TabsScreen> {
           backgroundColor: Theme.of(context).colorScheme.onBackground,
         ));
       });
+    }
   }
 
   void _selectItem(int index) {
@@ -73,7 +76,8 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final filteredMeals = dummyMeals.where((meal) {
+    final meals = ref.watch(mealsProvider);
+    final filteredMeals = meals.where((meal) {
       if (!meal.isGlutenFree && _selectedFilters[Filters.Glutenfree]! ||
           !meal.isLactoseFree && _selectedFilters[Filters.Lactosefree]! ||
           !meal.isVegetarian && _selectedFilters[Filters.Vegetarian]!) {
@@ -87,15 +91,18 @@ class _TabsScreenState extends State<TabsScreen> {
       filteredMeals: filteredMeals,
     );
 
-    if (_selectedItemIndex == 1)
+    if (_selectedItemIndex == 1) {
       activeScreen = MealsScreen(
         meals: _favoriteMeals,
         toggleFav: _toggleFavMeals,
       );
+    }
 
     return Scaffold(
       appBar: AppBar(
-        title: _selectedItemIndex == 1 ? Text('Favorites') : Text('Categories'),
+        title: _selectedItemIndex == 1
+            ? const Text('Favorites')
+            : const Text('Categories'),
       ),
       drawer: CustomDrawer(onSelectDrawer: _selectDrawer),
       body: activeScreen,
