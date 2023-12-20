@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:meals_app/providers/favorite_meals_provider.dart';
 import 'package:meals_app/providers/meals_provider.dart';
 import 'package:meals_app/screens/categories_screen.dart';
 import 'package:meals_app/screens/filters.dart';
 import 'package:meals_app/screens/meals_screen.dart';
 import 'package:meals_app/widgets/custom_drawer.dart';
-
-import '../models/meal.dart';
 
 const kFiltersMap = {
   Filters.Glutenfree: false,
@@ -24,34 +23,7 @@ class TabsScreen extends ConsumerStatefulWidget {
 
 class _TabsScreenState extends ConsumerState<TabsScreen> {
   int _selectedItemIndex = 0;
-  final List<Meal> _favoriteMeals = [];
   Map<Filters, bool> _selectedFilters = kFiltersMap;
-
-  void _toggleFavMeals(Meal meal) {
-    if (_favoriteMeals.contains(meal)) {
-      setState(() {
-        _favoriteMeals.remove(meal);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(
-            "Recipe removed from your favorites",
-            style: TextStyle(color: Theme.of(context).colorScheme.background),
-          ),
-          backgroundColor: Theme.of(context).colorScheme.onBackground,
-        ));
-      });
-    } else {
-      setState(() {
-        _favoriteMeals.add(meal);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(
-            "Recipe added to your favorites",
-            style: TextStyle(color: Theme.of(context).colorScheme.background),
-          ),
-          backgroundColor: Theme.of(context).colorScheme.onBackground,
-        ));
-      });
-    }
-  }
 
   void _selectItem(int index) {
     setState(() {
@@ -87,14 +59,13 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
     }).toList();
 
     Widget activeScreen = CategoriesScreen(
-      toggleFav: _toggleFavMeals,
       filteredMeals: filteredMeals,
     );
 
     if (_selectedItemIndex == 1) {
+      var favoriteMeals = ref.watch(favoriteMealsProvider);
       activeScreen = MealsScreen(
-        meals: _favoriteMeals,
-        toggleFav: _toggleFavMeals,
+        meals: favoriteMeals,
       );
     }
 
