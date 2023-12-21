@@ -22,23 +22,35 @@ class MealDetailsScreen extends ConsumerWidget {
         title: Text(meal.title),
         actions: [
           IconButton(
-            onPressed: () {
-              final added =
-                  ref.read(favoriteMealsProvider.notifier).toggleFavMeals(meal);
+              onPressed: () {
+                final added = ref
+                    .read(favoriteMealsProvider.notifier)
+                    .toggleFavMeals(meal);
 
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(
-                  added
-                      ? "Recipe added to your favorites"
-                      : "Recipe removed from your favorites",
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.background),
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                    added
+                        ? "Recipe added to your favorites"
+                        : "Recipe removed from your favorites",
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.background),
+                  ),
+                  backgroundColor: Theme.of(context).colorScheme.onBackground,
+                ));
+              },
+              icon: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                transitionBuilder: (child, animation) {
+                  return ScaleTransition(
+                    scale: Tween<double>(begin: 0, end: 1).animate(animation),
+                    child: child,
+                  );
+                },
+                child: Icon(
+                  isFavorite ? Icons.favorite : Icons.favorite_border,
+                  key: ValueKey(isFavorite),
                 ),
-                backgroundColor: Theme.of(context).colorScheme.onBackground,
-              ));
-            },
-            icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border),
-          )
+              ))
         ],
       ),
       body: SingleChildScrollView(
