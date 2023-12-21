@@ -60,9 +60,10 @@ class _CategoriesScreenState extends State<CategoriesScreen>
     return AnimatedBuilder(
         animation: _animationController,
         builder: (context, child) {
-          return Padding(
-            padding: EdgeInsets.only(
-              top: 100 - _animationController.value * 100,
+          return SlideTransition(
+            position: Tween(begin: Offset(0, 0.3), end: Offset(0, 0)).animate(
+              CurvedAnimation(
+                  parent: _animationController, curve: Curves.decelerate),
             ),
             child: child,
           );
