@@ -27,7 +27,7 @@ class MealItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(8),
+      margin: const EdgeInsets.all(8),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
@@ -36,19 +36,22 @@ class MealItem extends StatelessWidget {
       child: InkWell(
         onTap: onSelectMeal,
         child: Stack(children: [
-          FadeInImage(
-            placeholder: MemoryImage(kTransparentImage),
-            image: NetworkImage(meal.imageUrl),
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: 200,
+          Hero(
+            tag: meal.id,
+            child: FadeInImage(
+              placeholder: MemoryImage(kTransparentImage),
+              image: NetworkImage(meal.imageUrl),
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: 200,
+            ),
           ),
           Positioned(
             left: 0,
             right: 0,
             bottom: 0,
             child: Container(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 vertical: 6,
                 horizontal: 10,
               ),
@@ -60,7 +63,7 @@ class MealItem extends StatelessWidget {
                   textAlign: TextAlign.center,
                   softWrap: true,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -74,14 +77,14 @@ class MealItem extends StatelessWidget {
                     icon: Icons.schedule,
                     label: '${meal.duration} min',
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 12,
                   ),
                   MealItemTrait(
                     icon: Icons.bar_chart_sharp,
                     label: complexityText,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 12,
                   ),
                   MealItemTrait(
